@@ -14,24 +14,20 @@ public class Graph {
         public int x;
         public int y;
   
-        public Node(String name, int value, int x, int y){
+        public Node(String name, int value, int x, int y){                                       // constructor
         	this.name = name;
         	this.value = value;
         	this.x = x; 
         	this.y = y;
         }
   
-        public int dist(int x, int y){
+        public int distance(int x, int y){                                                 // distance between current this.node and a point (x, y)                                
             return (this.x - x)*(this.x - x) + (this.y - y)*(this.y - y);
-        }
-  
-        public int dist(Node n){
-        	return this.dist(n.x, n.y);
         }
   
         public void render(Graphics g){                                                                          // PAINT THE NODE
         	g.fillOval(this.x - Tema2.RADIUS, this.y - Tema2.RADIUS, Tema2.RADIUS * 2, Tema2.RADIUS * 2);
-        	g.drawString(name + ", " + Integer.toString(value), this.x - 35, this.y - Tema2.RADIUS - 10);
+        	g.drawString(this.name + ", " + Integer.toString(this.value), this.x - Tema2.RADIUS - 20, this.y - Tema2.RADIUS - 10);
         }
     }
   
@@ -39,23 +35,23 @@ public class Graph {
     public class Edge{
     	private String name;
     	private int value;
-        private Node n1;
-        private Node n2;
+        private Node node1;
+        private Node node2;
   
-        public Edge(String name, int value, Node a, Node b){
+        public Edge(String name, int value, Node a, Node b){                                  // constructor
         	this.name = name;
         	this.value = value;
-        	this.n1 = a; 
-        	this.n2 = b;
+        	this.node1 = a; 
+        	this.node2 = b;
         }
   
-        public boolean matches(Node a, Node b){
-            return (a == n1 && b == n2) || (a == n2 && b == n1);
+        public boolean matches(Node a, Node b){                                                // verify if nodes a and b are the same node
+            return (a == node1 && b == node2) || (a == node2 && b == node1);
         }
   
-        public void render(Graphics g){                                                         // PAINT THE EDGE
-        	g.drawLine(n1.x, n1.y, n2.x, n2.y);
-        	g.drawString(name + ", " + Integer.toString(value), (n1.x + n2.x)/2, (n1.y + n2.y)/2);
+        public void render(Graphics g){                                                                         // PAINT THE EDGE
+        	g.drawLine(node1.x, node1.y, node2.x, node2.y);
+        	g.drawString(name + ", " + Integer.toString(value), (node1.x + node2.x)/2, (node1.y + node2.y)/2);
         }
     }
   
@@ -67,34 +63,24 @@ public class Graph {
     }
     
     
-    public void addNode(Node n){                                                                     // add to List a node
-    	nodes.add(n);
-    }
-    
-    
-    public void addEdge(Node n1, Node n2){                                                           // add to List an edge with node1 and node2
+    public void addEdge(Node n1, Node n2){                                                           // add to List an edge with nodes n1 and n2
     	String name = JOptionPane.showInputDialog(GUI_Tema2.graph_Panel, "Edge name:");
     	String value = JOptionPane.showInputDialog(GUI_Tema2.graph_Panel, "Edge value:");
     	edges.add(new Edge(name, Integer.parseInt(value), n1, n2));
     }
     
     
-    public void addEdge(Edge e){                                                                     // add to List an edge
-    	edges.add(e);
-    }
-    
-    
-    public void delNode(Node n){                                                                     // delete from List a node
+    public void deleteNode(Node n){                                                                     // delete from List a node
     	nodes.remove(n);
     }
     
     
-    public void delEdge(Edge e){                                                                     // delete from List an edge
+    public void deleteEdge(Edge e){                                                                     // delete from List an edge
     	edges.remove(e);
     }
   
     
-    public void render(Graphics g){                                                                 // render/draw the nodes and adges from Lists
+    public void render(Graphics g){                                                                 // render/draw the nodes and edges from Lists
         for(Edge e : edges){
         	e.render(g);
         }
@@ -114,26 +100,26 @@ public class Graph {
     }
   
     
-    public Node getNode(int x, int y){
-        if(nodes.isEmpty()){                                                                       // no nodes to match
+    public Node getNode(int x, int y){                                    // get the node ........closest node around a click point (x, y)
+        if(nodes.isEmpty()){                                                                       // if List nodes is empty
         	return null;
         } 
         Node closest = nodes.get(0);                                                               // start with node[0] as closest node
-        int close = closest.dist(x,y);                                                             // store the distance
+        int close = closest.distance(x,y);                                                             // store the distance
         for(Node n : nodes){                                                                       // and search all the List for a closest node
-            int d = n.dist(x,y);
+            int d = n.distance(x,y);
             if(d < close){                                                                         // if found a closer Node
                 close = d;                                                                         // store distance and closer node
                 closest = n;
             }
         }
-        return (close < Tema2.PROXIMITY) ? closest : null;                                              // return closest node or null, if not any
+        return (close < Math.pow(Tema2.RADIUS, 2)) ? closest : null;                               // return closest node or null, if not any
     }
   
     
     public boolean unconnected(Node n){                                                            // return true if node has not any edge
         for(Edge e : edges){
-        	if(e.n1 == n || e.n2 == n){
+        	if(e.node1 == n || e.node2 == n){
         		return false;
         	}
         }

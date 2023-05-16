@@ -3,11 +3,11 @@ import javax.swing.event.MouseInputAdapter;
 
 
 public class MouseListener extends MouseInputAdapter{
-    private GUI_Tema2 graph_Panel;
+    private GUI_Tema2 graph_Panel;                                        // Panel received trough constructor
     private Graph.Node drowedNode; 
   
     
-    public MouseListener(GUI_Tema2 gui){
+    public MouseListener(GUI_Tema2 gui){                                  // constructor
     	graph_Panel = gui;
     }
   
@@ -17,17 +17,17 @@ public class MouseListener extends MouseInputAdapter{
         Graph.Node clickedNode = GUI_Tema2.graph.getNode(e.getX(), e.getY());
         if(clickedNode != null){                                           // if clicked on a node
             if(GUI_Tema2.selected == null){                                      // if node is not selected
-        	    graph_Panel.actionSelect(clickedNode);                                 // select the clicked nod
+        	    graph_Panel.actionSelectNode(clickedNode);                                 // select the clicked nod
             } else {                                                               // else
                 if(clickedNode == GUI_Tema2.selected){                               // if click on selected node
-            	    graph_Panel.actionDeleteSelection();                                    // delete the node
+            	    graph_Panel.actionDeleteNode();                                    // delete the node
                 } else {                                                             // else
-            	    graph_Panel.actionToggleEdge(clickedNode);    // toggle the edge between both nodes (first is selected and second is clicked)
+            	    graph_Panel.actionSwitchEdge(clickedNode);                         // switch the edge between both nodes
                 }
             }
         } else {                                                                   // else .....clicked on open space
             if(GUI_Tema2.selected != null){                                          // if a node is selected
-        	    graph_Panel.actionDropSelection();                                         // release the selection
+        	    graph_Panel.actionReleaseSelectedNode();                                     // release the selection
             } else {                                                                   // else..... no node selected
         	    graph_Panel.actionCreateNode(e.getX(), e.getY());                          // create a new node
             }
