@@ -75,8 +75,55 @@ public class Graph {
     }
     
     
-    public void deleteEdge(Edge e){                                                                     // delete from List an edge
+    public void editUnconnectedNode(Node n){                                                          // edit name and value of an unconnected node
+    	String newName = JOptionPane.showInputDialog(GUI_Tema2.graph_Panel, "Node new name:");
+    	String newValue = JOptionPane.showInputDialog(GUI_Tema2.graph_Panel, "Node new value:");            // read new name and value
+    	for(Node node : nodes){
+        	if(node.name == n.name) {                                                                       // find the node in nodes list
+        		node.name = newName;                                                                           // and change the name and value
+            	node.value = Integer.parseInt(newValue);
+        	}
+        }
+    	for(Edge edge : edges){                                                                             // find the nodes node1=n or node2=n
+        	if(edge.node1.name == n.name) {                                                                     // for all the edge in edges list
+        		edge.node1.name = newName;                                                                         // and rename that nodes
+            	edge.node1.value = Integer.parseInt(newValue);
+        	}
+        	if(edge.node2.name == n.name) {
+        		edge.node2.name = newName;
+            	edge.node2.value = Integer.parseInt(newValue);
+        	}
+        }
+    	
+    }
+    
+    
+    public void editConnectedNode(Node n){                                                          // edit name and value of an unconnected node
+    	for(Node node : nodes){
+        	if(node.name == n.name) {
+        		String newName = JOptionPane.showInputDialog(GUI_Tema2.graph_Panel, "Node new name:");
+            	String newValue = JOptionPane.showInputDialog(GUI_Tema2.graph_Panel, "Node new value:");
+            	node.name = newName;
+            	node.value = Integer.parseInt(newValue);
+        	}
+        }
+    }
+    
+    
+    public void deleteEdge(Edge e){                                                                     // delete an edge from List
     	edges.remove(e);
+    }
+    
+    
+    public void editEdge(Edge e){                                                                     // edit an edge in List edges
+    	for(Edge edge : edges){
+        	if(edge.name == e.name) {
+        		String newName = JOptionPane.showInputDialog(GUI_Tema2.graph_Panel, "Edge new name:");
+            	String newValue = JOptionPane.showInputDialog(GUI_Tema2.graph_Panel, "Edge new value:");
+            	edge.name = newName;
+            	edge.value = Integer.parseInt(newValue);
+        	}
+        }
     }
   
     
@@ -113,7 +160,7 @@ public class Graph {
                 closest = n;
             }
         }
-        return (close < Math.pow(Tema2.RADIUS, 2)) ? closest : null;                               // return closest node or null, if not any
+        return (close < Math.pow(Tema2.RADIUS, 2)) ? closest : null;                     // return closest node (in proximity) or null, if not any
     }
   
     

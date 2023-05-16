@@ -1,4 +1,6 @@
 import java.awt.event.MouseEvent;
+
+import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 
 
@@ -14,15 +16,23 @@ public class MouseListener extends MouseInputAdapter{
     
     @Override
     public void mouseClicked(MouseEvent e){
-        Graph.Node clickedNode = GUI_Tema2.graph.getNode(e.getX(), e.getY());
-        if(clickedNode != null){                                           // if clicked on a node
+        Graph.Node clickedNode = GUI_Tema2.graph.getNode(e.getX(), e.getY());             // take the closest node (if in proximity)
+        if(clickedNode != null){                                              // if clicked on a node
             if(GUI_Tema2.selected == null){                                      // if node is not selected
         	    graph_Panel.actionSelectNode(clickedNode);                                 // select the clicked nod
-            } else {                                                               // else
+            } else {                                                               // else.....node is selected
                 if(clickedNode == GUI_Tema2.selected){                               // if click on selected node
-            	    graph_Panel.actionDeleteNode();                                    // delete the node
-                } else {                                                             // else
-            	    graph_Panel.actionSwitchEdge(clickedNode);                         // switch the edge between both nodes
+                	if(SwingUtilities.isLeftMouseButton(e)){                              // if left mouse button was clicked
+                	    graph_Panel.actionDeleteNode();                                       // delete the node
+                	} else if(SwingUtilities.isRightMouseButton(e)) {                     // else ... right mouse button was clicked
+                		graph_Panel.actionEditNode();                                         // edit the node name and value
+                	}
+                } else {                                                             // else .... click on unselected node
+                	if(SwingUtilities.isLeftMouseButton(e)){                              // if left mouse button was clicked
+            	        graph_Panel.actionSwitchEdge(clickedNode);                           // switch the edge between both nodes
+                	} else if(SwingUtilities.isRightMouseButton(e)) {                     // else ... right mouse button was clicked
+                		graph_Panel.actionEditEdge(clickedNode);
+                	}
                 }
             }
         } else {                                                                   // else .....clicked on open space
@@ -32,9 +42,19 @@ public class MouseListener extends MouseInputAdapter{
         	    graph_Panel.actionCreateNode(e.getX(), e.getY());                          // create a new node
             }
         }
-        graph_Panel.repaint();                                             // repaint the frame
+        graph_Panel.repaint();                                                // repaint the frame
     }
   
+    
+    
+    public void mouseDragged(MouseEvent e){                                       // move on screen the selected node
+        if(drowedNode != null){
+            drowedNode.x = e.getX(); 
+            drowedNode.y = e.getY();
+            graph_Panel.repaint();
+        }
+    }
+    
     
     @Override
     public void mousePressed(MouseEvent e){
@@ -48,15 +68,6 @@ public class MouseListener extends MouseInputAdapter{
     @Override
     public void mouseReleased(MouseEvent e){
     	drowedNode = null;
-    }
-  
-    
-    public void mouseDragged(MouseEvent e){
-        if(drowedNode != null){
-            drowedNode.x = e.getX(); 
-            drowedNode.y = e.getY();
-            graph_Panel.repaint();
-        }
     }
 
 }

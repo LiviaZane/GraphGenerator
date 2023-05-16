@@ -5,7 +5,6 @@ import javax.swing.JPanel;
   
 
 public class GUI_Tema2 extends JPanel{
-	private static final long serialVersionUID = 3983157687677813216L;
 	public static GUI_Tema2 graph_Panel;                                       // panel to draw graph inside
 	public static Graph graph;                                                 // from Graphics library
     public static Graph.Node selected;                                         // selected node
@@ -58,9 +57,18 @@ public class GUI_Tema2 extends JPanel{
   
     
     public void actionDeleteNode(){                                                                  // delete a node
-    	if(graph.unconnected(selected)){                                                                    // if selected and selected again
+    	if(graph.unconnected(selected)){                                                                    // if selected node is not connected
     		graph.deleteNode(selected);                                                                        // then delete the node
-    		selected = null;                                                                                // to not hang by a deleted node
+    		selected = null;                                                                                // to not hang on by a deleted node
+    	}
+    }
+    
+    
+    public void actionEditNode(){                                                                    // edit a node
+    	if(graph.unconnected(selected)){                                                                 // if node unconnected
+    		graph.editUnconnectedNode(selected);                                                              // editUnconnected
+    	} else {                                                                                         // else
+    		graph.editConnectedNode(selected);                                                                // editConnected
     	}
     }
   
@@ -71,6 +79,13 @@ public class GUI_Tema2 extends JPanel{
     		graph.addEdge(selected, n);                                                                        // create an edge
     	} else {                                                                                        // else (exist an edge)
     		graph.deleteEdge(e);                                                                                  // delete it
+    	}
+    }
+    
+    public void actionEditEdge(Graph.Node n){                                            			 // edit an edge
+    	Graph.Edge e = graph.getEdge(selected, n);                                                      // select the edge of the n node, if any
+    	if(e != null){                                                                                       // if exist an edge
+    		graph.editEdge(e);                                                                                  // edit it
     	}
     }
     
